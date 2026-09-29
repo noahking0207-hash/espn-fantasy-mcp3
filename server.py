@@ -4,8 +4,23 @@ from typing import Any
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
-mcp = FastMCP("ESPN Fantasy Data")
+security = TransportSecuritySettings(
+    enable_dns_rebinding_protection=True,
+    allowed_hosts=[
+        "espn-fantasy-mcp3.onrender.com",
+        "espn-fantasy-mcp3.onrender.com:*",
+    ],
+    allowed_origins=[
+        "https://espn-fantasy-mcp3.onrender.com",
+    ],
+)
+
+mcp = FastMCP(
+    "ESPN Fantasy Data",
+    transport_security=security,
+)
 
 BASE = "https://lm-api-reads.fantasy.espn.com"
 SPORT = os.getenv("ESPN_SPORT", "ffl")
