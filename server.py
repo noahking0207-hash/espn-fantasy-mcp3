@@ -151,5 +151,12 @@ async def get_status(authorization: str | None = None) -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    # Streamable HTTP is the transport expected by portable Agent Plugins MCP configuration.
-    mcp.run(transport="streamable-http")
+    import os
+
+    port = int(os.environ.get("PORT", "8000"))
+
+    mcp.run(
+        transport="streamable-http",
+        host="0.0.0.0",
+        port=port,
+    )
