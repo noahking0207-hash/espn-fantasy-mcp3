@@ -64,8 +64,12 @@ async def _get(view: str, headers: dict[str, str] | None = None, params: dict[st
     p["view"] = view
     async with httpx.AsyncClient(timeout=TIMEOUT, follow_redirects=True) as client:
         r = await client.get(_league_url(), params=p, headers=h, cookies=_cookies())
-        r.raise_for_status()
-        return r.json()
+        if r.status_code != 200:
+    raise RuntimeError(
+        f"ESPN request failed: status={r.status_code}, body={r.text[:1000]}"
+    )
+
+return r.json()
 
 
 async def _get_players(filter_obj: dict[str, Any], scoring_period_id: int | None = None) -> Any:
